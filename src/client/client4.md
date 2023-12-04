@@ -271,3 +271,139 @@ Certainly! Let's go deeper into the remaining code:
 
 This TypeScript file defines a powerful TonClient for interacting with the TON blockchain. It provides methods for obtaining the current state, executing contract methods, and handling both external and internal messages. The included codecs ensure that responses from the blockchain node are properly structured and can be relied upon in subsequent application logic. The overall design and implementation of this TonClient make it a versatile tool for developers building applications on the TON blockchain.
 
+
+
+***
+
+
+
+### Contract Provider Methods (Continued)
+
+#### 5. `internal(via, message)`
+   - Sends an internal message to the smart contract via another contract (`via`).
+   - Resolves the latest block information.
+   - Checks if initialization data (`init`) is required.
+   - Resolves parameters like value, bounce, send mode, and message body.
+   - Sends the internal message using the `via.send` method, which typically involves invoking a method on another contract.
+
+   - **Parameters:**
+     - `via`: The contract through which the internal message will be sent.
+     - `message`: An object containing details of the internal message, including destination address (`to`), value, bounce behavior, send mode, initialization data, and body.
+
+#### Codecs (Continued)
+
+#### 10. `lastBlockCodec`
+   - Validates the structure of the response containing information about the last block.
+   - Checks for properties such as `seqno`, `shard`, `workchain`, `fileHash`, `rootHash`, `stateRootHash`, and `now`.
+
+#### 11. `blockCodec`
+   - Validates the structure of the response containing information about a block.
+   - Supports both the case where the block does not exist (`exist: false`) and the case where it exists (`exist: true`).
+   - Provides details about the shards, including workchain, seqno, shard, rootHash, fileHash, and an array of transactions.
+
+#### 12. `storageStatCodec`
+   - Validates the structure of storage statistics, including properties like `lastPaid`, `duePayment`, and `used` (with sub-properties: `bits`, `cells`, `publicCells`).
+
+#### 13. `accountCodec` and `accountLiteCodec`
+   - Validate the structure of responses containing account information.
+   - `accountCodec` provides detailed information including `state`, `balance`, `last` transaction details, and `storageStat`.
+   - `accountLiteCodec` provides a lighter version with less detail.
+
+#### 14. `changedCodec`
+   - Validates the structure of the response indicating whether an account has changed.
+   - Contains a boolean property `changed` and block information if changed.
+
+#### 15. `runMethodCodec`
+   - Validates the structure of the response after executing a contract method.
+   - Includes properties such as `exitCode`, `resultRaw`, and details about the executed block and shard block.
+
+#### 16. `configCodec`
+   - Validates the structure of the response containing network configuration.
+   - Checks for properties like `cell`, `address`, and `globalBalance`.
+
+#### 17. `sendCodec`
+   - Validates the structure of the response after sending an external message.
+   - Contains a `status` property indicating the status of the message.
+
+#### 18. `transactionsCodec` and `parsedTransactionsCodec`
+   - Validate the structure of responses containing raw and parsed transaction data.
+   - `transactionsCodec` includes an array of block information and a string-encoded `boc`.
+   - `parsedTransactionsCodec` includes an array of parsed transactions and block information.
+
+### Type Definitions
+
+#### 19. `ParsedTransaction` and `ParsedTransactions`
+   - Type definitions representing the structure of parsed transaction data.
+   - `ParsedTransaction` includes details about an individual transaction, and `ParsedTransactions` includes an array of transactions along with block information.
+
+### Conclusion
+
+The TypeScript file continues to define methods for interacting with the TON blockchain, focusing on internal messages and providing additional type definitions for parsed transaction data. The included codecs ensure the validity of responses, and the methods enable the smart contract to send internal messages and handle various blockchain-related tasks. The comprehensive structure of the file showcases a well-designed TonClient for developers working with the TON blockchain.
+
+
+
+***
+
+
+### Contract Provider Methods (Continued)
+
+#### 5. `internal(via, message)`
+   - This method is responsible for sending internal messages to the smart contract through another contract (`via`).
+   - The process involves several steps:
+      1. **Resolve Last Block:** Fetches information about the latest block using `client.getLastBlock()`.
+      2. **Resolve Init:** Checks if initialization data (`init`) is needed by examining the state of the account at the latest block.
+      3. **Resolve Bounce:** Determines whether the message should bounce based on the provided `message.bounce`.
+      4. **Resolve Value:** Converts the `message.value` to a `bigint` using `toNano` if it's a string.
+      5. **Resolve Body:** Prepares the message body, converting it to a `Cell` if it's a string or using the provided `message.body`.
+      6. **Send Internal Message:** Invokes the `via.send` method to send the internal message to the smart contract. The message includes details such as destination address (`to`), value, bounce behavior, send mode, initialization data, and body.
+
+#### Codecs (Continued)
+
+#### 10. `lastBlockCodec`
+   - This codec validates the structure of the response that contains information about the last block.
+   - Properties such as `seqno`, `shard`, `workchain`, `fileHash`, `rootHash`, `stateRootHash`, and `now` are checked for correctness.
+
+#### 11. `blockCodec`
+   - This codec validates the structure of the response that contains information about a block.
+   - It supports both cases: when the block does not exist (`exist: false`) and when it exists (`exist: true`).
+   - Provides detailed information about shards, including workchain, seqno, shard, rootHash, fileHash, and an array of transactions.
+
+#### 12. `storageStatCodec`
+   - Validates the structure of storage statistics, checking properties such as `lastPaid`, `duePayment`, and `used` (with sub-properties: `bits`, `cells`, `publicCells`).
+
+#### 13. `accountCodec` and `accountLiteCodec`
+   - These codecs validate the structure of responses containing account information.
+   - `accountCodec` provides detailed information, including `state`, `balance`, `last` transaction details, and `storageStat`.
+   - `accountLiteCodec` provides a lighter version with less detail.
+
+#### 14. `changedCodec`
+   - Validates the structure of the response indicating whether an account has changed.
+   - Contains a boolean property `changed` and block information if changed.
+
+#### 15. `runMethodCodec`
+   - Validates the structure of the response after executing a contract method.
+   - Includes properties such as `exitCode`, `resultRaw`, and details about the executed block and shard block.
+
+#### 16. `configCodec`
+   - Validates the structure of the response containing network configuration.
+   - Checks for properties like `cell`, `address`, and `globalBalance`.
+
+#### 17. `sendCodec`
+   - Validates the structure of the response after sending an external message.
+   - Contains a `status` property indicating the status of the message.
+
+#### 18. `transactionsCodec` and `parsedTransactionsCodec`
+   - These codecs validate the structure of responses containing raw and parsed transaction data.
+   - `transactionsCodec` includes an array of block information and a string-encoded `boc`.
+   - `parsedTransactionsCodec` includes an array of parsed transactions and block information.
+
+### Type Definitions
+
+#### 19. `ParsedTransaction` and `ParsedTransactions`
+   - These type definitions represent the structure of parsed transaction data.
+   - `ParsedTransaction` includes details about an individual transaction, and `ParsedTransactions` includes an array of transactions along with block information.
+
+### Conclusion
+
+This TypeScript file serves as a comprehensive interface for interacting with the TON blockchain. The provided methods, along with the associated codecs and type definitions, enable developers to seamlessly send internal messages, fetch block information, and handle various blockchain-related tasks. The meticulous validation ensures the integrity of responses, contributing to the reliability of the TonClient for TON blockchain development.
+
